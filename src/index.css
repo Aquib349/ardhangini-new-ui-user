@@ -1,13 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* css to hide scrollbar */
+body::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* css for the navbar linear gradient */
+.pitch-100 {
+  color: rgb(253, 243, 207);
+}
+.pitch-200 {
+  color: rgb(253, 226, 199);
+}
+
+/* Add this CSS to your styles or create a CSS module */
+.glass-container {
+  display: inline-block;
+  width: 50px; /* Adjust width as needed */
+  height: 50px; /* Adjust height as needed */
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+  border-radius: 50%; /* Rounded corners */
+  backdrop-filter: blur(6px); /* Blur effect for glassy look */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for glass effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow around the glass container */
+  display: flex; /* Center the star inside */
+  align-items: center; /* Vertically center the star */
+  justify-content: center; /* Horizontally center the star */
+}
+
+.star-icon {
+  width: 15px; /* Adjust the size as needed */
+  height: 15px; /* Adjust the size as needed */
+  color: #ffd700; /* Gold color */
+  filter: drop-shadow(
+    2px 2px 3px rgba(248, 211, 4, 0.4)
+  ); /* Shadow for 3D effect */
+  transform: rotateY(20deg); /* Optional: Slight rotation for 3D look */
+}
+
+/* Optional: Add a hover effect for the star */
+.glass-container:hover .star-icon {
+  filter: drop-shadow(2px 2px 3px rgba(248, 211, 4, 0.4))
+    drop-shadow(0 0 10px #ffd700) drop-shadow(0 0 20px #ffd700);
 }
