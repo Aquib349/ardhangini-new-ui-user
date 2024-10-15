@@ -1,4 +1,4 @@
-import { apiClient, handleApiError } from "@/src/services/axios/axiso.service";
+import { apiClient, handleApiError } from "@/src/services/axios/axios.service";
 
 // method : "post"  => add item to cart
 export async function AddItemToCart(postBody: object) {

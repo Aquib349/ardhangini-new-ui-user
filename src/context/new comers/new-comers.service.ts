@@ -1,10 +1,10 @@
-import { apiClient, handleApiError } from "@/src/services/axios/axiso.service"
+import { apiClient, handleApiError } from "../../services/axios/axios.service"
 
 // fetch all the products from the url
 // method : "get" 
-export const fetchAllProducts = async (id : any) => {
+export const fetchAllProducts = async () => {
     try {
-        const response = await apiClient.get(`/product/:${id}`)
+        const response = await apiClient.get('/product');
         return response.data
     } catch (error) {
         handleApiError(error);

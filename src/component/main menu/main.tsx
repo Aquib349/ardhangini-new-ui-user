@@ -2,6 +2,7 @@ import { useState } from "react";
 import Welcome from "../../shared/welcome-content";
 import Navigation from "./navigation";
 import NewComers from "./new-comers";
+import { ProductContextProvider } from "../../context/new comers/new-comers";
 
 function Main() {
   const [active, setActive] = useState("newcomers");
@@ -22,7 +23,11 @@ function Main() {
         </div>
       </div>
       <Navigation active={active} setActive={setActive} />
-      <NewComers />
+
+      {/* new comers */}
+      <ProductContextProvider>
+        <NewComers />
+      </ProductContextProvider>
     </>
   );
 }
