@@ -1,26 +1,16 @@
-// import * as dotenv from "dotenv";
-// dotenv.config();
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
-
-// const { CLERK_PUBLISHABLE_KEY } = process.env;
-
-// if (!PUBLISHABLE_KEY) {
-//   throw new Error("Missing Publishable Key");
-// }
+import router from "./App";
+import { RouterProvider } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />,
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

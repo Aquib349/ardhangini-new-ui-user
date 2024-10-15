@@ -54,7 +54,7 @@ const Navbar = () => {
         >
           <div className="logo">
             <img
-              src="http://localhost:3001/ardhangini-ui-app/static/media/logo.467edc9ea236a6228436.png"
+              src="https://localhost:3001/ardhangini-ui-app/static/media/logo.467edc9ea236a6228436.png"
               alt="logo"
               style={{ height: "70px" }}
               className="px-4 cursor-pointer"

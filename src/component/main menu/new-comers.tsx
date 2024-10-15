@@ -1,13 +1,13 @@
-import { ShoppingCart } from "lucide-react";
+import emblaCarouselAutoplay from "embla-carousel-autoplay";
 import React, { useState } from "react";
-import { Badge } from "../ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
-import emblaCarouselAutoplay from "embla-carousel-autoplay";
+import { Badge } from "../ui/badge";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { TiStarFullOutline } from "react-icons/ti";
 
-function Wishlist() {
+function NewComers() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const plugin = React.useRef(
     emblaCarouselAutoplay({ delay: 2000, stopOnInteraction: true })
@@ -39,9 +39,8 @@ function Wishlist() {
   ];
   return (
     <>
-      <div className="wishlist-component">
-        <div className="main grid grid-cols-5 gap-y-4 p-2">
-          {/* mapping */}
+      <div className="new-comers">
+        <div className="main p-4">
           <div className="w-[16rem] px-0 py-2 bg-white rounded-lg shadow-md border">
             {/* Product Image */}
             <div className="flex justify-center">
@@ -105,9 +104,14 @@ function Wishlist() {
               <div>
                 <p className="text-lg font-semibold">$45.95</p>
               </div>
-              <Button variant="outline" className="p-2 h-8">
-                <ShoppingCart size={16} />
-              </Button>
+              <div className="space-x-2">
+                <Button variant="outline" className="p-2 h-8">
+                  <Heart size={16} />
+                </Button>
+                <Button variant="outline" className="p-2 h-8">
+                  <ShoppingCart size={16} />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -116,4 +120,4 @@ function Wishlist() {
   );
 }
 
-export default Wishlist;
+export default NewComers;
