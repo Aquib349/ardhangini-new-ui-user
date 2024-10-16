@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import { TiStarFullOutline } from "react-icons/ti";
 import { useNewComers } from "../../hooks/use-new-comers";
@@ -33,28 +33,29 @@ function NewComers() {
       link: "https://images.unsplash.com/photo-1596706487679-9f95f5891975?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   ];
+
   return (
     <>
-      <div className="new-comers grid grid-cols-5 md:grid-cols-3 gap-4">
+      <div className="new-comers grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {products.map((val) => (
           <div key={val.id} className="main p-4">
-            <div className="w-[16rem] px-0 py-2 bg-white rounded-lg shadow-md border">
+            <div className="w-full max-w-xs mx-auto bg-white rounded-lg shadow-md border">
               {/* Product Image */}
               <div className="flex justify-center">
                 <Carousel
                   plugins={[plugin.current]}
-                  className="w-[90%] max-w-xs"
+                  className="w-full"
                   onMouseEnter={plugin.current.stop}
                   onMouseLeave={plugin.current.reset}
                 >
                   <CarouselContent className="h-[300px]">
-                    {images.map((val) => (
-                      <CarouselItem key={val.id}>
+                    {images.map((img) => (
+                      <CarouselItem key={img.id}>
                         <Card>
                           <CardContent className="flex aspect-square items-center justify-center p-0">
                             <img
-                              src={val.link}
-                              alt="images"
+                              src={img.link}
+                              alt="product"
                               className="object-cover rounded-md"
                             />
                           </CardContent>
@@ -81,9 +82,7 @@ function NewComers() {
               {/* Color Options */}
               <div className="mt-2 px-3">
                 <div className="flex space-x-2 mt-1">
-                  {/* {colors.map((color) => ( */}
                   <div
-                    // key={color.name}
                     onClick={() => setSelectedColor(val.colour.name)}
                     className={`w-4 h-4 rounded-sm cursor-pointer border ${
                       selectedColor === val.colour.name
@@ -92,11 +91,10 @@ function NewComers() {
                     }`}
                     style={{ backgroundColor: val.colour.name }}
                   ></div>
-                  {/* ))} */}
                 </div>
               </div>
 
-              {/* item description */}
+              {/* Item Description */}
               <div className="mt-2 px-3">
                 <p className="text-xs">{val.productDescription}</p>
               </div>
@@ -116,17 +114,17 @@ function NewComers() {
                   )}
                 </div>
 
-                <div className="space-x-2">
+                <div className="space-x-0">
                   <Button
                     variant="outline"
-                    className="p-2 h-8"
+                    className="p-2 h-8 border-none"
                     onClick={() => addItemWishlist(val.id, val.productType.id)}
                   >
                     <Heart size={16} />
                   </Button>
                   <Button
                     variant="outline"
-                    className="p-2 h-8"
+                    className="p-2 h-8 border-none"
                     onClick={() => addItemCart(val.id, val.productType.id)}
                   >
                     <ShoppingCart size={16} />

@@ -56,10 +56,9 @@ const Navbar = () => {
         >
           <div className="logo">
             <img
-              src="https://localhost:3001/ardhangini-ui-app/static/media/logo.467edc9ea236a6228436.png"
+              src="assets/logo.png"
               alt="logo"
-              style={{ height: "70px" }}
-              className="px-4 cursor-pointer"
+              className="px-4 cursor-pointer w-24 py-1"
               onClick={() => navigate("/")}
             />
           </div>
