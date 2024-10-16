@@ -19,8 +19,10 @@ import {
 } from "../component/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import { useClerk } from "@clerk/clerk-react";
+import { useCart } from "../hooks/use-cart";
 
 const Navbar = () => {
+  const { cartItemData } = useCart();
   const [navbarBg, setNavbarBg] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,9 +80,15 @@ const Navbar = () => {
                 onClick={() => navigate("/cart")}
               >
                 <ShoppingCart size={20} />
-                <div className="text-white w-5 h-5 text-[0.75rem] bg-red-500 font-bold absolute rounded-full -top-2 -right-2 flex justify-center items-center">
-                  14
-                </div>
+                {cartItemData ? (
+                  cartItemData.cartLineItems.length > 0 && (
+                    <div className="text-white w-5 h-5 text-[0.75rem] bg-red-500 font-bold absolute rounded-full -top-2 -right-2 flex justify-center items-center">
+                      {cartItemData?.cartLineItems.length}
+                    </div>
+                  )
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="nav-items flex z-50">

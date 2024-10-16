@@ -9,8 +9,11 @@ import {
 } from "../ui/accordion";
 import CartItem from "./cart-item";
 import Payment from "./payment";
+import { useCart } from "../../hooks/use-cart";
 
 const CartManagement = () => {
+  const { cartItemData, removeItem } = useCart();
+
   const handleCopyCode = () => {
     navigator.clipboard.writeText("BFD10");
     alert("Coupon code copied!");
@@ -20,30 +23,20 @@ const CartManagement = () => {
     <div className="flex flex-col lg:flex-row gap-8 px-4 py-2 text-sm w-[95%] m-auto relative">
       <div className="w-full lg:w-2/3">
         <div className="space-y-2">
-          <CartItem
-            id="1"
-            image="https://via.placeholder.com/150"
-            title="Sweater No.4 Beige Winter Collection"
-            size="Beige"
-            price={199}
-            quantity="2"
-          />
-          <CartItem
-            id="2"
-            image="https://via.placeholder.com/150"
-            title="Chic Silhouette Knit Ankle Sock Boots"
-            size="Black"
-            price={299}
-            quantity="3"
-          />
-          <CartItem
-            id="3"
-            image="https://via.placeholder.com/150"
-            title="Autumn Essence Ribbed Half-Zip Pullover Sweater"
-            size="Brown"
-            price={499}
-            quantity="1"
-          />
+          {cartItemData?.cartLineItems.map((val) => (
+            <CartItem
+              key={val.id}
+              id={val.id}
+              productTypeId={val.productTypeId}
+              image="https://via.placeholder.com/150"
+              title={val.productName}
+              size="fixed size"
+              actualPrice={val.actualPricePerItem}
+              finalPrice={val.finalPricePerItem}
+              quantity={val.quantity}
+              removeItem={removeItem}
+            />
+          ))}
         </div>
       </div>
 
@@ -101,7 +94,7 @@ const CartManagement = () => {
           <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
           <div className="flex justify-between mb-2">
             <span>Subtotal</span>
-            <span>$997</span>
+            <span>{cartItemData?.actualTotalPrice}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>SGST</span>

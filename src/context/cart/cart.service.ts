@@ -1,9 +1,9 @@
-import { apiClient, handleApiError } from "@/src/services/axios/axios.service";
+import { apiClient, handleApiError } from "../../services/axios/axios.service";
 
-// method : "post"  => add item to cart
-export async function AddItemToCart(postBody: object) {
+// method : "get" => get all the items added to cart
+export async function getCartItem(userId: string) {
   try {
-    const response = await apiClient.post("/cart/add", postBody);
+    const response = await apiClient.get(`/cart/${userId}`);
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -11,10 +11,10 @@ export async function AddItemToCart(postBody: object) {
   }
 }
 
-// method : "get" => get all the items added to cart
-export async function getCartItem() {
+// method : "DELETE" => remove item from the cart
+export async function removeItemFromCart(itemBody: object) {
   try {
-    const response = await apiClient.get("/cart");
+    const response = await apiClient.post("/cart/remove", itemBody);
     return response.data;
   } catch (error) {
     handleApiError(error);

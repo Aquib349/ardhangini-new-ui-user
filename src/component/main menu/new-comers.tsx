@@ -9,17 +9,11 @@ import { TiStarFullOutline } from "react-icons/ti";
 import { useNewComers } from "../../hooks/use-new-comers";
 
 function NewComers() {
-  const { products, meta } = useNewComers();
+  const { products, addItemCart, addItemWishlist } = useNewComers();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const plugin = React.useRef(
     emblaCarouselAutoplay({ delay: 2000, stopOnInteraction: true })
   );
-
-  // Sample colors
-  const colors = [
-    { name: "Black", value: "#000" },
-    { name: "Beige", value: "#D3C2A5" },
-  ];
 
   const images = [
     {
@@ -41,7 +35,7 @@ function NewComers() {
   ];
   return (
     <>
-      <div className="new-comers grid grid-cols-5 gap-4">
+      <div className="new-comers grid grid-cols-5 md:grid-cols-3 gap-4">
         {products.map((val) => (
           <div key={val.id} className="main p-4">
             <div className="w-[16rem] px-0 py-2 bg-white rounded-lg shadow-md border">
@@ -87,18 +81,18 @@ function NewComers() {
               {/* Color Options */}
               <div className="mt-2 px-3">
                 <div className="flex space-x-2 mt-1">
-                  {colors.map((color) => (
-                    <div
-                      key={color.name}
-                      onClick={() => setSelectedColor(color.value)}
-                      className={`w-5 h-5 rounded-full cursor-pointer border ${
-                        selectedColor === color.value
-                          ? "border-black"
-                          : "border-gray-300"
-                      }`}
-                      style={{ backgroundColor: color.value }}
-                    ></div>
-                  ))}
+                  {/* {colors.map((color) => ( */}
+                  <div
+                    // key={color.name}
+                    onClick={() => setSelectedColor(val.colour.name)}
+                    className={`w-4 h-4 rounded-sm cursor-pointer border ${
+                      selectedColor === val.colour.name
+                        ? "border-black border-2"
+                        : "border-gray-300"
+                    }`}
+                    style={{ backgroundColor: val.colour.name }}
+                  ></div>
+                  {/* ))} */}
                 </div>
               </div>
 
@@ -113,22 +107,28 @@ function NewComers() {
                   {val.offerprice ? (
                     <>
                       <p className="text-sm font-semibold text-slate-500 line-through">
-                        ₹ {val.actualprice}
+                        ₹{val.actualprice}
                       </p>
-                      <p className="text-md font-medium">
-                        ₹ {val.offerprice}
-                      </p>
+                      <p className="text-sm font-medium">₹{val.offerprice}</p>
                     </>
                   ) : (
-                    <p className="text-md font-semibold">₹ {val.actualprice}</p>
+                    <p className="text-sm font-semibold">₹{val.actualprice}</p>
                   )}
                 </div>
 
                 <div className="space-x-2">
-                  <Button variant="outline" className="p-2 h-8">
+                  <Button
+                    variant="outline"
+                    className="p-2 h-8"
+                    onClick={() => addItemWishlist(val.id, val.productType.id)}
+                  >
                     <Heart size={16} />
                   </Button>
-                  <Button variant="outline" className="p-2 h-8">
+                  <Button
+                    variant="outline"
+                    className="p-2 h-8"
+                    onClick={() => addItemCart(val.id, val.productType.id)}
+                  >
                     <ShoppingCart size={16} />
                   </Button>
                 </div>

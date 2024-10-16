@@ -109,3 +109,52 @@ interface Occassion {
 interface Style {
   // Define properties for style if there are any
 }
+
+export interface ProductResponse {
+  items: Product[];
+  meta: Record<string, any>;
+}
+
+export interface NewComersProps {
+  products: Product[];
+  meta: Record<string, any>;
+  addItemCart: (productId: string, typeId: string) => void;
+  addItemWishlist: (productId: string, typeId: string) => void;
+}
+
+export interface CartResponse {
+  cartId: "string";
+  userId: "string";
+  cartLineItems: [
+    {
+      productId: "string";
+      typeId: "string";
+      quantity: 0;
+      productTypeId: "string";
+      productThumbnail: "string";
+      productName: "string";
+      actualPricePerItem: 0;
+      finalPricePerItem: 0;
+      actualTotalPrice: 0;
+      finalTotalPrice: 0;
+      totalSgst: 0;
+      totalCgst: 0;
+    }
+  ];
+  actualTotalPrice: 0;
+  finalTotalPrice: 0;
+  totalSgst: 0;
+  totalCgst: 0;
+  shipping: 0;
+}
+
+export interface wishlistResponse {
+  wishListId: string;
+  userId: string;
+  lineItems: [
+    {
+      productId: string;
+      typeId: string;
+    }
+  ];
+}
