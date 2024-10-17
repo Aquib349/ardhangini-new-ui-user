@@ -4,7 +4,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import Navbar from "./shared/Navbar";
 import CartManagement from "./component/layouts/cart-page";
 import Orders from "./component/layouts/orders-page";
-import Profile from "./component/layouts/customer-profile";
+import Profile from "./component/user-profile/customer-profile";
 import Wishlist from "./component/layouts/wishlist";
 import Login from "./component/layouts/login";
 import SignUp from "./component/layouts/sign-up";
@@ -13,6 +13,8 @@ import { CartContextProvider } from "./context/cart/cart";
 import { WishlistProvider } from "./context/wishlist/wishlist";
 import { ProductContextProvider } from "./context/new comers/new-comers";
 import { Toaster } from "react-hot-toast";
+import { UserOrderProvider } from "./context/orders/orders";
+import { AddressProvider } from "./context/address/address";
 // import OrderDetail from "./component/layouts/order-detail";
 
 export function App() {
@@ -28,8 +30,8 @@ export function App() {
         <CartContextProvider>
           <WishlistProvider>
             <ProductContextProvider>
-              <div className="mt-[4.8rem]">
-                <Navbar />
+              <Navbar />
+              <div className="mt-[4.5rem]">
                 <Outlet />
               </div>
             </ProductContextProvider>
@@ -54,10 +56,28 @@ const router = createBrowserRouter([
       { path: "sign-up", element: <SignUp /> },
       {
         path: "cart",
-        element: <CartManagement />,
+        element: (
+          <CartContextProvider>
+            <CartManagement />,
+          </CartContextProvider>
+        ),
       },
-      { path: "orders", element: <Orders /> },
-      { path: "profile", element: <Profile /> },
+      {
+        path: "orders",
+        element: (
+          <UserOrderProvider>
+            <Orders />
+          </UserOrderProvider>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <AddressProvider>
+            <Profile />
+          </AddressProvider>
+        ),
+      },
       { path: "wishlist", element: <Wishlist /> },
     ],
   },

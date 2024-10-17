@@ -1,6 +1,8 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { CartContextProps, CartResponse } from "./interface";
-import { getCartItem, removeItemFromCart } from "./cart.service";
+import { CartContextProps, CartResponse, OrderResponse } from "./interface";
+import { getCartItem, placeOrder, removeItemFromCart } from "./cart.service";
+import { toastService } from "../../services/toast/toast.service";
+import { useNavigate } from "react-router-dom";
 
 export const CartContext = createContext<CartContextProps | undefined>(
   undefined
@@ -11,6 +13,7 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [cartItemData, setCartItemData] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // function to fetch the cart item data
   async function fetchCartData() {
@@ -55,11 +58,46 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  // function to place an order
+  async function placeOrders(
+    orderType: string,
+    deliveryAddress: string,
+    billingAddress: string,
+    paymentMethod: string
+  ) {
+    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    const body = {
+      userId: userId,
+      orderType: orderType,
+      deliveryAddress: deliveryAddress,
+      billingAddress: billingAddress,
+      paymentMethod: paymentMethod,
+    };
+    try {
+      const data: OrderResponse = await placeOrder(body);
+      if (data) toastService.dismissToast();
+      toastService.showToast("Item ordered Successfully", "success", {
+        position: "top-center",
+      });
+      navigate("/orders");
+    } catch (error) {
+      console.error("Couldn't Ordered:", error);
+
+      toastService.dismissToast();
+
+      toastService.showToast("Order failed!.", "error", {
+        position: "top-center",
+      });
+    }
+  }
+
   useEffect(() => {
     fetchCartData();
   }, []);
   return (
-    <CartContext.Provider value={{ cartItemData, removeItem, fetchCartData }}>
+    <CartContext.Provider
+      value={{ cartItemData, removeItem, fetchCartData, placeOrders }}
+    >
       {children}
     </CartContext.Provider>
   );

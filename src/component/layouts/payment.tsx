@@ -11,14 +11,23 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
-function Payment() {
+interface paymentProps {
+  isCodEnabled: boolean;
+  handleToggle: () => void;
+}
+
+function Payment({ isCodEnabled, handleToggle }: paymentProps) {
   return (
     <>
       <div className="border px-4 py-3 rounded-lg">
         <h2 className="text-lg font-semibold mb-2">Payment Summary</h2>
         <div className="cod flex items-center justify-between">
           <p className="">Cash On Delivery</p>
-          <Switch id="airplane-mode" />
+          <Switch
+            id="airplane-mode"
+            checked={isCodEnabled}
+            onCheckedChange={handleToggle}
+          />
         </div>
         <div className="mt-4">
           <Tabs defaultValue="account" className="w-[400px]">

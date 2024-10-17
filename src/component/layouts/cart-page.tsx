@@ -10,14 +10,32 @@ import {
 import CartItem from "./cart-item";
 import Payment from "./payment";
 import { useCart } from "../../hooks/use-cart";
+import { useNewComers } from "../../hooks/use-new-comers";
+import { useEffect, useState } from "react";
 
 const CartManagement = () => {
-  const { cartItemData, removeItem } = useCart();
+  const { cartItemData, removeItem, placeOrders } = useCart();
+  const { addItemWishlist } = useNewComers();
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [isCodEnabled, setIsCodEnabled] = useState(false);
+
+  // function to set the payment method
+  function handlePaymentMethod() {
+    setIsCodEnabled((prev) => !prev);
+  }
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText("BFD10");
     alert("Coupon code copied!");
   };
+
+  useEffect(() => {
+    if (isCodEnabled) {
+      setPaymentMethod("cod");
+    } else {
+      setPaymentMethod("");
+    }
+  }, [isCodEnabled]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 px-4 py-2 text-sm w-[95%] m-auto relative">
@@ -35,6 +53,7 @@ const CartManagement = () => {
               finalPrice={val.finalPricePerItem}
               quantity={val.quantity}
               removeItem={removeItem}
+              addItemWishlist={addItemWishlist}
             />
           ))}
         </div>
@@ -94,35 +113,48 @@ const CartManagement = () => {
           <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
           <div className="flex justify-between mb-2">
             <span>Subtotal</span>
-            <span>{cartItemData?.actualTotalPrice}</span>
+            <span>₹{cartItemData?.actualTotalPrice}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>SGST</span>
-            <span>$5.47</span>
+            <span>₹{cartItemData?.totalSgst}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>CGST</span>
-            <span>$5.47</span>
+            <span>₹{cartItemData?.totalCgst}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>Shipping</span>
-            <span>$9.99</span>
+            <span>₹0.00</span>
           </div>
           <div className="flex justify-between mb-2 text-green-500">
             <span>Free Shipping Promo</span>
-            <span>-$9.99</span>
+            <span>-₹0.00</span>
           </div>
           <div className="flex justify-between font-bold">
             <span>Total Cost</span>
-            <span>$997</span>
+            <span>₹{Number(cartItemData?.finalTotalPrice).toFixed(2)}</span>
           </div>
         </div>
 
         {/* payment history */}
-        <Payment />
+        <Payment
+          isCodEnabled={isCodEnabled}
+          handleToggle={handlePaymentMethod}
+        />
 
         {/* Checkout Section */}
-        <Button className="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-600">
+        <Button
+          className="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-600"
+          onClick={() =>
+            placeOrders(
+              "cashondelivery",
+              "test-address",
+              "test-billing-address",
+              paymentMethod
+            )
+          }
+        >
           <span className="flex items-center justify-center space-x-2">
             <span>CheckOut</span>
           </span>

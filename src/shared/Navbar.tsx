@@ -54,13 +54,16 @@ const Navbar = () => {
               : "bg-gradient-to-r from-blue-300 via-[#fdf3cf] to-[#fdecd2]"
           }`}
         >
-          <div className="logo">
+          <div
+            className="logo flex items-center gap-x-2 cursor-pointer "
+            onClick={() => navigate("/")}
+          >
             <img
               src="assets/logo.png"
               alt="logo"
-              className="px-4 cursor-pointer w-24 py-1"
-              onClick={() => navigate("/")}
+              className="w-16 h-16 rounded-full p-1"
             />
+            <p className="uppercase font-bold text-2xl">ardhangini</p>
           </div>
           <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
             <Input

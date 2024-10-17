@@ -56,9 +56,6 @@ export const ProductContextProvider: React.FC<{ children: ReactNode }> = ({
   // function to add item to cart
   async function addItemCart(productId: string, typeId: string) {
     setLoading(true);
-    toastService.showToast("Adding...", "loading", {
-      position: "top-center",
-    });
     const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
     const body = {
       userId: userId,
@@ -72,10 +69,6 @@ export const ProductContextProvider: React.FC<{ children: ReactNode }> = ({
     };
     try {
       const data: CartResponse = await AddItemToCart(body);
-      toastService.dismissToast();
-      toastService.showToast("Item Added Successfully", "success", {
-        position: "top-center",
-      });
       return data;
     } catch (error) {
       toastService.dismissToast();

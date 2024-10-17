@@ -3,11 +3,23 @@ import { Button } from "../component/ui/button";
 function Welcome() {
   return (
     <>
-      <div className="welcome">
-        <div className="main grid grid-cols-2 pt-12">
+      <div className="relative h-[600px]">
+        {/* Video Background with lower opacity */}
+        {/* <video
+          autoPlay
+          loop
+          muted
+          className="absolute w-full h-full object-cover -z-10 opacity-75"
+        >
+          <source src="assets/vedio.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> */}
+
+        {/* Content over the video */}
+        <div className="grid grid-cols-2 pt-12 relative z-10 h-screen">
           <div className="flex items-center flex-col relative">
-            <div className="w-[380px] mt-14">
-              <p className="text-[3rem] leading-[3rem] my-3 font-semibold">
+            <div className="w-[380px] mt-16">
+              <p className="text-[3rem] leading-[3rem] my-3 font-semibold text-white">
                 Discover a World Of Best Saree's
               </p>
               <Button
@@ -20,26 +32,7 @@ function Welcome() {
             <img
               src="assets/ban1.png"
               alt="banner"
-              className="w-full absolute bottom-16"
-            />
-          </div>
-          <div className="flex items-center justify-center relative">
-            <img
-              src="assets/saree.png"
-              alt="saree"
-              className="w-[24rem] ml-12 z-10 pt-6 pb-6"
-              style={{
-                position: "relative",
-                zIndex: 1,
-                filter: "brightness(1.2)",
-                backgroundSize: "cover",
-                backgroundBlendMode: "overlay",
-              }}
-            />
-            <img
-              src="assets/ban.png"
-              alt="banner"
-              className="absolute -top-6 opacity-40"
+              className="w-full absolute bottom-[20%]"
             />
           </div>
         </div>

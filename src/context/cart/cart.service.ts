@@ -21,3 +21,14 @@ export async function removeItemFromCart(itemBody: object) {
     throw error;
   }
 }
+
+// method : "POST" => place an order
+export async function placeOrder(orderBody: object) {
+  try {
+    const response = await apiClient.post("/order-details", orderBody);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+}

@@ -7,7 +7,12 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
+import { useAddress } from "../../hooks/use-address";
+import UserAddress from "./user-address";
+
 const Profile = () => {
+  const { addresses, removeUserAddress, addUserAddress } = useAddress();
+
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-md shadow-md text-sm">
       {/* Profile Picture and Upload Button */}
@@ -62,10 +67,10 @@ const Profile = () => {
         <div>
           <p className="text-gray-700 font-medium pb-1">Contacts</p>
           <p>
-            <strong>Phone:</strong>  +91-1234567890
+            <strong>Phone:</strong> +91-1234567890
           </p>
           <p>
-            <strong>Email:</strong>  finalui@yandex.com
+            <strong>Email:</strong> finalui@yandex.com
           </p>
         </div>
         <TooltipProvider>
@@ -83,28 +88,11 @@ const Profile = () => {
       </div>
 
       {/* address */}
-      <div className="flex justify-between items-center py-4 border-b">
-        <div>
-          <p className="text-gray-700 font-medium pb-1">Saved Address</p>
-          <p>
-            Malaysia Road, Bla bla <br />
-            Saawan oval, 605 <br />
-            Malaysia, 12101
-          </p>
-        </div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" className="border-0">
-                <Pencil size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-black/90 text-white">
-              <p>Edit</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      <UserAddress
+        addresses={addresses}
+        removeUserAddress={removeUserAddress}
+        addUserAddress={addUserAddress}
+      />
 
       {/* Language & Currency Section */}
       <div className="flex justify-between items-center py-4">

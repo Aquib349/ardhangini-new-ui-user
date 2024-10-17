@@ -12,6 +12,7 @@ function CartItem({
   finalPrice,
   quantity,
   removeItem,
+  addItemWishlist,
 }: {
   id: string;
   productTypeId: string;
@@ -22,6 +23,7 @@ function CartItem({
   finalPrice: number;
   quantity: string;
   removeItem: (productid: string, typeId: string, quantity: number) => void;
+  addItemWishlist: (productid: string, typeId: string) => void;
 }) {
   const initialCounter = Number(quantity) > 0 ? Number(quantity) : 1;
   const [counter, setCounter] = useState<number>(initialCounter);
@@ -69,10 +71,10 @@ function CartItem({
               <Button
                 variant="outline"
                 className="text-rose-500 bg-transparent border-0 p-0 h-6 hover:bg-transparent"
+                onClick={() => addItemWishlist(id, productTypeId)}
               >
                 <Heart size={18} />
               </Button>
-              {/* <p className="text-xs">Add to wishlist</p> */}
             </div>
             <div className="flex gap-2 items-center hover:font-medium hover:text-black cursor-pointer">
               <Button
@@ -82,7 +84,6 @@ function CartItem({
               >
                 <Trash2 size={18} />
               </Button>
-              {/* <p className="text-xs">Delete</p> */}
             </div>
           </div>
         </div>

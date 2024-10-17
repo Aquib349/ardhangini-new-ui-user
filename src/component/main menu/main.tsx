@@ -9,19 +9,7 @@ function Main() {
 
   return (
     <>
-      <div
-        className=""
-        style={{
-          backgroundImage: "url(/assets/img.jpg)",
-          height: "100%",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="">
-          <Welcome />
-        </div>
-      </div>
+      <Welcome />
       <Navigation active={active} setActive={setActive} />
 
       {/* new comers */}
