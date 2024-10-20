@@ -3,7 +3,6 @@ import { Input } from "../component/ui/input";
 import {
   Headset,
   Heart,
-  LogIn,
   LogOut,
   Menu,
   Search,
@@ -18,15 +17,19 @@ import {
   DropdownMenuTrigger,
 } from "../component/ui/dropdown-menu";
 import { useEffect, useState } from "react";
-import { useClerk } from "@clerk/clerk-react";
 import { useCart } from "../hooks/use-cart";
+import { apiClient } from "../services/axios/axios.service";
+import { useCookies } from "react-cookie";
 
-const Navbar = () => {
-  const { cartItemData } = useCart();
+interface navbarProps {
+  removeCookie: (accessToken: string) => void;
+}
+
+const Navbar = ({ removeCookie }: navbarProps) => {
+  const { cartItemData, itemLength } = useCart();
   const [navbarBg, setNavbarBg] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { signOut } = useClerk();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +45,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [useCart, cartItemData]);
 
   return (
     <>
@@ -50,12 +53,12 @@ const Navbar = () => {
         <div
           className={`main flex justify-between items-center py-1 px-2 z-50 fixed w-full left-0 top-0 transition-colors duration-900 ${
             navbarBg && location.pathname === "/"
-              ? "bg-gradient-to-r from-blue-300 via-[#fdf3cf] to-[#fdecd2]"
-              : "bg-gradient-to-r from-blue-300 via-[#fdf3cf] to-[#fdecd2]"
+              ? "bg-gradient-to-r from-blue-400 via-[#fdf3cf] to-[#fdecd2]"
+              : "bg-gradient-to-r from-blue-400 via-[#fdf3cf] to-[#fdecd2]"
           }`}
         >
           <div
-            className="logo flex items-center gap-x-2 cursor-pointer "
+            className="logo flex items-center cursor-pointer "
             onClick={() => navigate("/")}
           >
             <img
@@ -63,7 +66,7 @@ const Navbar = () => {
               alt="logo"
               className="w-16 h-16 rounded-full p-1"
             />
-            <p className="uppercase font-bold text-2xl">ardhangini</p>
+            <p className="font-bold text-4xl logo-name">Ardhangini</p>
           </div>
           <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
             <Input
@@ -82,15 +85,9 @@ const Navbar = () => {
                 onClick={() => navigate("/cart")}
               >
                 <ShoppingCart size={20} />
-                {cartItemData ? (
-                  cartItemData.cartLineItems.length > 0 && (
-                    <div className="text-white w-5 h-5 text-[0.75rem] bg-red-500 font-bold absolute rounded-full -top-2 -right-2 flex justify-center items-center">
-                      {cartItemData?.cartLineItems.length}
-                    </div>
-                  )
-                ) : (
-                  <></>
-                )}
+                <div className="text-white w-5 h-5 text-[0.75rem] bg-red-500 font-bold absolute rounded-full -top-2 -right-2 flex justify-center items-center">
+                  {itemLength}
+                </div>
               </div>
             </div>
             <div className="nav-items flex z-50">
@@ -129,7 +126,11 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onSelect={() => signOut({ redirectUrl: "/login" })}
+                    onSelect={async () => {
+                      await apiClient.get("/user-auth/log-out");
+                      navigate("/login");
+                      removeCookie("accessToken");
+                    }}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>

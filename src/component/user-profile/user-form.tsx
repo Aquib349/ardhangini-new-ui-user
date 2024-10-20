@@ -17,6 +17,7 @@ interface userFormProps {
     town: string,
     mobileNumber: string
   ) => void;
+  onClose: () => void;
 }
 
 // Define the form schema with all required fields
@@ -142,14 +143,14 @@ function UserForm({ addUserAddress }: userFormProps) {
           />
           <FormFieldComponent
             control={form.control}
-            name="phoneNumber"
+            name="mobileNumber"
             label="Phone Number"
             placeholder="+91 - 1234567890"
             isTextarea={false}
           />
         </div>
 
-        <Button type="submit" className="h-8 bg-green-600 text-xs">
+        <Button type="submit" className=" bg-green-600 text-xs">
           Submit
         </Button>
       </form>

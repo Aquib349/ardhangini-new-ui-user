@@ -25,6 +25,7 @@ export interface CartContextProps {
     billingAddress: string,
     paymentMethod: string
   ) => void;
+  itemLength: number
 }
 
 // Interface for Cart API response

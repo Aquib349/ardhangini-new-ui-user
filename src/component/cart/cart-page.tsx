@@ -7,8 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import CartItem from "./cart-item";
-import Payment from "./payment";
+import CartItem from "../cart/cart-item";
+import Payment from "../payment/payment";
 import { useCart } from "../../hooks/use-cart";
 import { useNewComers } from "../../hooks/use-new-comers";
 import { useEffect, useState } from "react";
@@ -44,7 +44,7 @@ const CartManagement = () => {
           {cartItemData?.cartLineItems.map((val) => (
             <CartItem
               key={val.id}
-              id={val.id}
+              id={val.productId}
               productTypeId={val.productTypeId}
               image="https://via.placeholder.com/150"
               title={val.productName}

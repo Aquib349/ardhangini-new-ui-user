@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { ClerkProvider } from "@clerk/clerk-react";
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./shared/Navbar";
-import CartManagement from "./component/layouts/cart-page";
-import Orders from "./component/layouts/orders-page";
+import CartManagement from "./component/cart/cart-page";
+import Orders from "./component/order/orders-page";
 import Profile from "./component/user-profile/customer-profile";
-import Wishlist from "./component/layouts/wishlist";
+import Wishlist from "./component/wishlist/wishlist";
 import Login from "./component/layouts/login";
 import SignUp from "./component/layouts/sign-up";
 import Main from "./component/main menu/main";
@@ -15,72 +14,107 @@ import { ProductContextProvider } from "./context/new comers/new-comers";
 import { Toaster } from "react-hot-toast";
 import { UserOrderProvider } from "./context/orders/orders";
 import { AddressProvider } from "./context/address/address";
-// import OrderDetail from "./component/layouts/order-detail";
+import ProtectedRoute from "./component/protected-route/protect-route";
+import { apiClient, handleApiError } from "./services/axios/axios.service";
+import { useCookies } from "react-cookie";
 
 export function App() {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const response = await apiClient.post("/user-auth/sign-in", {
+        email,
+        password,
+      });
+      const { accessToken, userId } = response.data;
+      localStorage.setItem('userId', userId);
+      setCookie("accessToken", accessToken, {
+        path: "/",
+        secure: true,
+        sameSite: "strict",
+      });
+      setAccessToken(accessToken);
+      navigate("/");
+    } catch (error) {
+      handleApiError(error);
+      console.error("Login failed:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (cookies.accessToken) {
+      console.log("User is already logged in.");
+    }
+  }, [cookies]);
+
+  useEffect(() => {
+    if (cookies.accessToken) {
+      setAccessToken(cookies.accessToken);
+    }
+  }, [cookies]);
+
   return (
     <>
       <Toaster />
-      <ClerkProvider
-        routerPush={(to) => navigate(to)}
-        routerReplace={(to) => navigate(to, { replace: true })}
-        publishableKey="pk_test_dm9jYWwtZXdlLTU5LmNsZXJrLmFjY291bnRzLmRldiQ"
-      >
-        <CartContextProvider>
-          <WishlistProvider>
-            <ProductContextProvider>
-              <Navbar />
-              <div className="mt-[4.5rem]">
-                <Outlet />
-              </div>
-            </ProductContextProvider>
-          </WishlistProvider>
-        </CartContextProvider>
-      </ClerkProvider>
+      <CartContextProvider>
+        <WishlistProvider>
+          <ProductContextProvider>
+            {<Navbar removeCookie={removeCookie} />}
+            <div className="mt-[4.5rem]">
+              <Routes>
+                <Route path="/" element={<Main />} />
+                <Route
+                  path="/login"
+                  element={<Login handleLogin={handleLogin} />}
+                />
+                <Route path="/sign-up" element={<SignUp />} />
+                <Route
+                  path="/cart"
+                  element={
+                    <ProtectedRoute isAuthenticated={!!accessToken}>
+                      <CartManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoute isAuthenticated={!!accessToken}>
+                      <UserOrderProvider>
+                        <Orders />
+                      </UserOrderProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute isAuthenticated={!!accessToken}>
+                      <AddressProvider>
+                        <Profile />
+                      </AddressProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/wishlist"
+                  element={
+                    <ProtectedRoute isAuthenticated={!!accessToken}>
+                      <Wishlist />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </div>
+          </ProductContextProvider>
+        </WishlistProvider>
+      </CartContextProvider>
     </>
   );
 }
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <Main />,
-        children: [],
-      },
-      { path: "login", element: <Login /> },
-      { path: "sign-up", element: <SignUp /> },
-      {
-        path: "cart",
-        element: (
-          <CartContextProvider>
-            <CartManagement />,
-          </CartContextProvider>
-        ),
-      },
-      {
-        path: "orders",
-        element: (
-          <UserOrderProvider>
-            <Orders />
-          </UserOrderProvider>
-        ),
-      },
-      {
-        path: "profile",
-        element: (
-          <AddressProvider>
-            <Profile />
-          </AddressProvider>
-        ),
-      },
-      { path: "wishlist", element: <Wishlist /> },
-    ],
-  },
-]);
-
-export default router;
+export default App;

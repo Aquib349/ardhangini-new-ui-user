@@ -17,7 +17,11 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({
 
   // function to get wishlist data
   async function fetchWishlistItem() {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    const userId = localStorage.getItem("usreId");
+    if (!userId) {
+      console.log("no user id");
+      return;
+    }
     setLoading(true);
     try {
       const data: WishlistResponse = await getWishlistItem(userId);
@@ -33,7 +37,11 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({
     typeId: string
   ) {
     setLoading(true);
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    const userId = localStorage.getItem("usreId");
+    if (!userId) {
+      console.log("no user id");
+      return;
+    }
     const body = {
       userId: userId,
       lineItems: [

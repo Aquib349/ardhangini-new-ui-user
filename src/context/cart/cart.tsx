@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { CartContextProps, CartResponse, OrderResponse } from "./interface";
 import { getCartItem, placeOrder, removeItemFromCart } from "./cart.service";
 import { toastService } from "../../services/toast/toast.service";
@@ -12,91 +12,137 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cartItemData, setCartItemData] = useState<CartResponse | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [itemLength, setItemLength] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // function to fetch the cart item data
-  async function fetchCartData() {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+  // Fetch cart item data
+  const fetchCartData = async (): Promise<void> => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
     setLoading(true);
     try {
-      const data: CartResponse = await getCartItem(userId);
-      setCartItemData(data);
+      const data = await getCartItem(userId);
+      if (data && Array.isArray(data.cartLineItems)) {
+        setCartItemData(data);
+        setItemLength(data.cartLineItems.length);
+      } else {
+        setItemLength(0);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch cart data:", error);
+      setItemLength(0);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  // function to remove the item from the cart
-  async function removeItem(
+  // Remove item from the cart
+  const removeItem = async (
     productId: string,
-    typeId: string,
-    quantity: number
-  ) {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    typeId: string
+  ): Promise<void> => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
     const body = {
-      userId: userId,
-      lineItems: [
-        {
-          productId: productId,
-          typeId: typeId,
-          quantity: 0,
-        },
-      ],
+      userId,
+      lineItems: [{ productId, typeId, quantity: 0 }],
     };
+
     setLoading(true);
     try {
-      const data: CartResponse = await removeItemFromCart(body);
-      return data;
+      await removeItemFromCart(body);
+      setCartItemData((prevData) => {
+        if (!prevData) return null;
+
+        const updatedItems = prevData.cartLineItems.filter(
+          (item) => item.productId !== productId
+        );
+        setItemLength(updatedItems.length);
+
+        return {
+          ...prevData,
+          cartLineItems: updatedItems,
+        };
+      });
+
+      toastService.showToast("Item removed from cart", "success", {
+        position: "top-center",
+      });
     } catch (error) {
-      console.log(error);
+      console.error("Failed to remove item:", error);
+      toastService.showToast("Failed to remove item", "error", {
+        position: "top-center",
+      });
     } finally {
-      fetchCartData();
       setLoading(false);
     }
-  }
+  };
 
-  // function to place an order
-  async function placeOrders(
+  // Place an order
+  const placeOrders = async (
     orderType: string,
     deliveryAddress: string,
     billingAddress: string,
     paymentMethod: string
-  ) {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+  ): Promise<void> => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
     const body = {
-      userId: userId,
-      orderType: orderType,
-      deliveryAddress: deliveryAddress,
-      billingAddress: billingAddress,
-      paymentMethod: paymentMethod,
+      userId,
+      orderType,
+      deliveryAddress,
+      billingAddress,
+      paymentMethod,
     };
+
+    setLoading(true);
     try {
       const data: OrderResponse = await placeOrder(body);
-      if (data) toastService.dismissToast();
-      toastService.showToast("Item ordered Successfully", "success", {
-        position: "top-center",
-      });
-      navigate("/orders");
+      if (data) {
+        toastService.dismissToast();
+        toastService.showToast("Item ordered successfully", "success", {
+          position: "top-center",
+        });
+        navigate("/orders");
+      }
     } catch (error) {
-      console.error("Couldn't Ordered:", error);
-
+      console.error("Order placement failed:", error);
       toastService.dismissToast();
-
-      toastService.showToast("Order failed!.", "error", {
+      toastService.showToast("Order failed!", "error", {
         position: "top-center",
       });
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
+  // Fetch cart data when component mounts
   useEffect(() => {
     fetchCartData();
   }, []);
+
   return (
     <CartContext.Provider
-      value={{ cartItemData, removeItem, fetchCartData, placeOrders }}
+      value={{
+        cartItemData,
+        removeItem,
+        fetchCartData,
+        placeOrders,
+        itemLength, // Make sure itemLength is being passed
+      }}
     >
       {children}
     </CartContext.Provider>

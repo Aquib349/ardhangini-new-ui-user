@@ -26,13 +26,12 @@ export const ProductContextProvider: React.FC<{ children: ReactNode }> = ({
   const { fetchCartData } = useCart();
   const { fetchWishlistItem } = useWishlist();
   const [products, setProducts] = useState<Product[]>([]);
-
   const [meta, setMeta] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Function to fetch all products
-  async function fetchAllProduct() {
+  const fetchAllProduct = async () => {
     setLoading(true);
     setError(null);
 
@@ -40,91 +39,106 @@ export const ProductContextProvider: React.FC<{ children: ReactNode }> = ({
       const data: ProductResponse = await fetchAllProducts();
       setProducts(data.items);
       setMeta(data.meta);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching product:", error);
-
-      toastService.dismissToast();
-      setError("Failed to fetch product.");
-      toastService.showToast("Failed to fetch item.", "error", {
-        position: "top-center",
-      });
+      setError(error.message || "Failed to fetch products.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  // function to add item to cart
-  async function addItemCart(productId: string, typeId: string) {
+  // Function to add item to cart
+  const addItemCart = async (productId: string, typeId: string) => {
     setLoading(true);
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    const userId = localStorage.getItem("userId"); 
+
+    if (!userId) {
+      toastService.showToast("User ID not found. Please log in.", "error", {
+        position: "top-center",
+      });
+      setLoading(false);
+      return;
+    }
+
     const body = {
-      userId: userId,
+      userId,
       lineItems: [
         {
-          productId: productId,
-          typeId: typeId,
-          quantity: 0,
+          productId,
+          typeId,
+          quantity: 0, 
         },
       ],
     };
+
     try {
       const data: CartResponse = await AddItemToCart(body);
+      toastService.showToast("Item added to cart successfully", "success", {
+        position: "top-center",
+      });
       return data;
-    } catch (error) {
-      toastService.dismissToast();
+    } catch (error: any) {
       setError("Failed to add item to cart.");
-      toastService.showToast("Failed to add item.", "error", {
+      toastService.showToast(error.message || "Failed to add item.", "error", {
         position: "top-center",
       });
     } finally {
       setLoading(false);
-      fetchCartData();
+      fetchCartData(); 
     }
-  }
+  };
 
-  // function to add item to wishlist
-  async function addItemWishlist(productId: string, typeId: string) {
+  // Function to add item to wishlist
+  const addItemWishlist = async (productId: string, typeId: string) => {
     setLoading(true);
     toastService.showToast("Adding...", "loading", {
       position: "top-center",
     });
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+
+    const userId = localStorage.getItem("userId"); 
+
+    if (!userId) {
+      toastService.showToast("User ID not found. Please log in.", "error", {
+        position: "top-center",
+      });
+      setLoading(false);
+      return;
+    }
+
     const body = {
-      userId: userId,
+      userId,
       lineItems: [
         {
-          productId: productId,
-          typeId: typeId,
+          productId,
+          typeId,
         },
       ],
     };
+
     try {
       const data: wishlistResponse = await AddItemToWishlist(body);
-      toastService.dismissToast();
-      toastService.showToast("Item Added to wishlist", "success", {
+      toastService.showToast("Item added to wishlist", "success", {
         position: "top-center",
       });
       return data;
-    } catch (error) {
-      toastService.dismissToast();
+    } catch (error: any) {
       setError("Failed to add item to wishlist.");
-      toastService.showToast("Failed to add item.", "error", {
+      toastService.showToast(error.message || "Failed to add item.", "error", {
         position: "top-center",
       });
     } finally {
-      fetchWishlistItem();
+      fetchWishlistItem(); 
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchAllProduct();
+    fetchAllProduct(); 
   }, []);
 
   return (
-    // Provide context value to children
     <productContext.Provider
-      value={{ products, meta, addItemCart, addItemWishlist }}
+      value={{ products, meta, addItemCart, addItemWishlist}} 
     >
       {children}
     </productContext.Provider>

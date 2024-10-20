@@ -21,8 +21,15 @@ export const AddressProvider: React.FC<{ children: ReactNode }> = ({
 
   // Function to fetch user addresses
   const fetchUserAddress = useCallback(async () => {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("User ID is not available in localStorage");
+      return;
+    }
+
     setLoading(true);
+
     try {
       const data = await getUserAddress(userId);
       setUserAddress(data);
@@ -70,6 +77,13 @@ export const AddressProvider: React.FC<{ children: ReactNode }> = ({
     town: string,
     mobileNumber: string
   ) => {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("User ID is not available in localStorage");
+      return;
+    }
+
     const body = {
       firstName,
       lastName,
@@ -79,8 +93,9 @@ export const AddressProvider: React.FC<{ children: ReactNode }> = ({
       state,
       town,
       mobileNumber,
-      userId: "01c0c1b7-31ab-4e63-8a5a-464164310947",
+      userId,
     };
+
     await handleApiCall(
       () => addAddress(body),
       "Added successfully",

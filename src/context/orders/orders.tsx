@@ -1,8 +1,9 @@
 // UserOrderContext.tsx
 import React, { createContext, ReactNode, useEffect, useState } from "react";
-import { AllOrderProps } from "./interface";
+import { AllOrderProps } from "./interface"; // Ensure that Order is defined in your interface file
 import { getAllUserOrders } from "./order.service";
 
+// Create context with an undefined initial value
 export const userOrderContext = createContext<AllOrderProps | undefined>(
   undefined
 );
@@ -10,29 +11,36 @@ export const userOrderContext = createContext<AllOrderProps | undefined>(
 export const UserOrderProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [AllOrders, setAllOrders] = useState([]);
+  const [AllOrders, setAllOrders] = useState([]); 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); 
 
-  // function to get all the orders of user
-  async function getAllOrders() {
-    const userId = "01c0c1b7-31ab-4e63-8a5a-464164310947";
+  // Function to get all the orders of the user
+  const getAllOrders = async () => {
+    const userId = localStorage.getItem("userId"); 
+    if (!userId) {
+      setError("User ID not found. Please log in.");
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await getAllUserOrders(userId);
       setAllOrders(data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Error fetching user orders:", error);
+      setError(error.message || "Failed to fetch orders.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getAllOrders();
   }, []);
 
   return (
-    <userOrderContext.Provider value={{ AllOrders: AllOrders }}>
+    <userOrderContext.Provider value={{ AllOrders }}>
       {children}
     </userOrderContext.Provider>
   );

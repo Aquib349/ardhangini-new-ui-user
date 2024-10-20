@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
 import {
   Accordion,
@@ -16,6 +17,7 @@ import {
 } from "../ui/dialog";
 
 import UserForm from "./user-form";
+
 interface addressProps {
   addresses: any[];
   removeUserAddress: (addressId: string) => void;
@@ -36,6 +38,11 @@ function UserAddress({
   removeUserAddress,
   addUserAddress,
 }: addressProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = () => setIsDialogOpen(true);
+  const closeDialog = () => setIsDialogOpen(false);
+
   return (
     <>
       <Accordion type="single" collapsible className="w-full">
@@ -67,11 +74,12 @@ function UserAddress({
               </div>
             ))}
 
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   className="h-8 mt-2 text-xs bg-green-200 border-2 hover:bg-green-300 border-green-600 text-green-600"
                   variant="outline"
+                  onClick={openDialog}
                 >
                   Add
                 </Button>
@@ -81,8 +89,11 @@ function UserAddress({
                   <DialogTitle className="p-0 m-0">Add Address</DialogTitle>
                   <DialogDescription></DialogDescription>
                 </DialogHeader>
-                {/* user form  */}
-                <UserForm addUserAddress={addUserAddress} />
+                {/* Pass the closeDialog function to UserForm */}
+                <UserForm
+                  addUserAddress={addUserAddress}
+                  onClose={closeDialog}
+                />
               </DialogContent>
             </Dialog>
           </AccordionContent>
