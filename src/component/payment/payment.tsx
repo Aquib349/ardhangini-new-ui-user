@@ -29,7 +29,7 @@ function Payment({ isCodEnabled, handleToggle }: paymentProps) {
             onCheckedChange={handleToggle}
           />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <Tabs defaultValue="account" className="w-[400px]">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="account">Card</TabsTrigger>
@@ -38,7 +38,6 @@ function Payment({ isCodEnabled, handleToggle }: paymentProps) {
             <TabsContent value="account">
               <Card>
                 <Accordion type="single" collapsible className="w-full px-4">
-                  {/* debit card */}
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="hover:no-underline">
                       <div className="flex items-center gap-x-2">
@@ -75,7 +74,6 @@ function Payment({ isCodEnabled, handleToggle }: paymentProps) {
                     </AccordionContent>
                   </AccordionItem>
 
-                  {/* credit card */}
                   <AccordionItem value="item-2">
                     <AccordionTrigger className="hover:no-underline">
                       <div className="flex items-center gap-x-2">
@@ -123,7 +121,7 @@ function Payment({ isCodEnabled, handleToggle }: paymentProps) {
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -69,6 +69,7 @@ export interface CartData {
 
 export interface AllOrderProps {
   AllOrders: CartData[];
+  cancelOrder: (orderId: string) => void;
 }
 
 export interface AllOrderResponse {

@@ -11,7 +11,7 @@ import {
 import { useOrders } from "../../hooks/use-order";
 
 const Orders: React.FC = () => {
-  const { AllOrders } = useOrders();
+  const { AllOrders, cancelOrder } = useOrders();
   return (
     <>
       <div className="order-component pt-2">
@@ -140,27 +140,90 @@ const Orders: React.FC = () => {
                                   <span className="text-gray-500">
                                     Location
                                   </span>
-                                  <span className="font-medium">
-                                    Malaysia Road, Bla bla
+                                  <span className="font-medium w-1/3">
+                                    {order.billingAddress.split(",")[1]},
+                                    {order.billingAddress.split(",")[2]},
+                                    {order.billingAddress.split(",")[3]},
+                                    {order.billingAddress.split(",")[4]}
                                   </span>
                                 </div>
 
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">City</span>
-                                  <span className="font-medium">Malaysia</span>
+                                  <span className="font-medium">-</span>
                                 </div>
 
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">State</span>
-                                  <span className="font-medium">Malaysia</span>
+                                  <span className="font-medium">
+                                    {order.billingAddress.split(",")[5]}
+                                  </span>
                                 </div>
 
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">PinCode</span>
-                                  <span className="font-medium">424-2343</span>
+                                  <span className="font-medium">
+                                    {order.billingAddress.split(",")[6]}
+                                  </span>
                                 </div>
                               </div>
                             </div>
+
+                            <hr />
+
+                            {/* Timeline Marker */}
+                            <div className="bg-white rounded-md p-4 shadow-sm">
+                              <h1 className="pb-2 font-semibold">
+                                Activity TimeLine
+                              </h1>
+                              {order.orderTimeLine.map((timeline: any) => (
+                                <div
+                                  key={timeline.id}
+                                  className="flex items-start mb-2"
+                                >
+                                  <div className="relative mr-4 pt-[0.25rem]">
+                                    <div className="relative w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
+                                      <svg
+                                        className="w-3 h-3 text-white"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
+                                          d="M5 13l4 4L19 7"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <div className="w-0.5 h-8 bg-gray-300 absolute top-4.5 left-1/2 transform -translate-x-1/2"></div>
+                                  </div>
+
+                                  <div className="flex-1">
+                                    {/* Order Creation */}
+                                    <h3 className="text-sm font-semibold">
+                                      {timeline.eventType}
+                                    </h3>
+                                    <p className="text-xs text-gray-500">
+                                      {timeline.eventDate}
+                                    </p>
+                                    <small className="leading-[0.1rem]">
+                                      {timeline.description}
+                                    </small>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            <hr />
+                            <Button
+                              className="bg-orange-500 mt-2 h-8"
+                              onClick={() => cancelOrder(val.id)}
+                            >
+                              Cancel
+                            </Button>
                           </div>
                         </SheetContent>
                       </Sheet>

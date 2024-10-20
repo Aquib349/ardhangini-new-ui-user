@@ -1,17 +1,14 @@
-import { Pencil, Trash2, Upload } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 
 import { useAddress } from "../../hooks/use-address";
 import UserAddress from "./user-address";
+import { useUser } from "../../hooks/use-user";
+import EditForm from "./edit-form";
 
 const Profile = () => {
   const { addresses, removeUserAddress, addUserAddress } = useAddress();
+  const { userDetail, updateUserDetails } = useUser();
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-md shadow-md text-sm">
@@ -24,7 +21,7 @@ const Profile = () => {
             className="w-20 h-20 rounded-full"
           />
         </div>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             className="text-red-500 hover:text-red-600 border px-1.5 h-8"
@@ -38,53 +35,33 @@ const Profile = () => {
             <Upload size={16} />
             <span>Upload</span>
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Name Section */}
       <div className="flex justify-between items-center border-b pb-4">
         <div>
           <p className="text-gray-500">Name</p>
-          <p className="font-semibold">Alex Jackson</p>
+          <p className="font-semibold">
+            {userDetail?.firstName} {userDetail?.lastName}
+          </p>
         </div>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" className="border-0">
-                <Pencil size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-black/90 text-white">
-              <p>Edit</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {/* edit form */}
+        <EditForm updateUserDetails={updateUserDetails}/>
       </div>
 
       {/* Contacts Section */}
-      <div className="flex justify-between items-center py-4 border-b">
+      <div className="py-4 border-b">
         <div>
           <p className="text-gray-700 font-medium pb-1">Contacts</p>
           <p>
-            <strong>Phone:</strong> +91-1234567890
+            <strong>Phone:</strong> {userDetail?.mobile}
           </p>
           <p>
-            <strong>Email:</strong> finalui@yandex.com
+            <strong>Email:</strong> {userDetail?.email}
           </p>
         </div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" className="border-0">
-                <Pencil size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-black/90 text-white">
-              <p>Edit</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
 
       {/* address */}

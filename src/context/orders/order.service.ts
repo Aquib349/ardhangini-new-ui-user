@@ -10,3 +10,14 @@ export const getAllUserOrders = async (userId: string) => {
     throw error;
   }
 };
+
+// method : "PUT" => cancel the ordered item
+export const cancelUserOrder = async (cancelBody: object) => {
+  try {
+    const response = await apiClient.put('/order-details/cancel', cancelBody);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+}

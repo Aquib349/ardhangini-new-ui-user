@@ -92,7 +92,8 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
     orderType: string,
     deliveryAddress: string,
     billingAddress: string,
-    paymentMethod: string
+    paymentMethod: string,
+    quantity: number
   ): Promise<void> => {
     const userId = localStorage.getItem("userId");
     if (!userId) {

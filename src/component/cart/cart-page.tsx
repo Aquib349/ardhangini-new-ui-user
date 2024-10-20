@@ -12,16 +12,52 @@ import Payment from "../payment/payment";
 import { useCart } from "../../hooks/use-cart";
 import { useNewComers } from "../../hooks/use-new-comers";
 import { useEffect, useState } from "react";
+import { useAddress } from "../../hooks/use-address";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import UserForm from "../user-profile/user-form";
+import { RadioGroupItem, RadioGroup } from "../ui/radio-group";
+
+interface Address {
+  firstName: string;
+  lastName: string;
+  addressLine1: string;
+  addressLine2: string;
+  state: string;
+  pin: number;
+  mobileNumber: string;
+}
 
 const CartManagement = () => {
   const { cartItemData, removeItem, placeOrders } = useCart();
+  const { addresses, addUserAddress } = useAddress();
   const { addItemWishlist } = useNewComers();
   const [paymentMethod, setPaymentMethod] = useState("");
   const [isCodEnabled, setIsCodEnabled] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectAddress, setSelectAddress] = useState("");
+  const [quantity, setQuantity] = useState<number>(0);
+
+  const openDialog = () => setIsDialogOpen(true);
+  const closeDialog = () => setIsDialogOpen(false);
 
   // function to set the payment method
   function handlePaymentMethod() {
     setIsCodEnabled((prev) => !prev);
+  }
+
+  // function to select address
+  function selectDeliveryAddress(address: Address) {
+    console.log(address);
+    setSelectAddress(
+      `${address?.firstName} ${address?.lastName}, ${address?.addressLine1}, ${address?.addressLine2}, ${address?.state}, ${address.pin}, ${address?.mobileNumber}`
+    );
   }
 
   const handleCopyCode = () => {
@@ -54,13 +90,14 @@ const CartManagement = () => {
               quantity={val.quantity}
               removeItem={removeItem}
               addItemWishlist={addItemWishlist}
+              setQuantity={setQuantity}
             />
           ))}
         </div>
       </div>
 
       <div className="w-full lg:w-1/3 space-y-4">
-        <Accordion
+        {/* <Accordion
           type="single"
           collapsible
           className="w-full bg-red-50 rounded-md"
@@ -92,9 +129,9 @@ const CartManagement = () => {
               </div>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
 
-        <div className="border px-4 py-3 rounded-lg">
+        {/* <div className="border px-4 py-3 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Promo Code</h2>
           <div className="flex space-x-2">
             <input
@@ -106,6 +143,64 @@ const CartManagement = () => {
               Apply
             </button>
           </div>
+        </div> */}
+
+        {/* user address */}
+        <div className="border px-4 py-3 rounded-lg">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1" className="pr-4">
+              <AccordionTrigger className="hover:no-underline text-md">
+                Saved Address
+              </AccordionTrigger>
+              <AccordionContent>
+                {addresses?.map((address, index) => (
+                  <div key={index} className="flex justify-between">
+                    <div className="flex justify-between items-center py-4 border-b">
+                      <p className="font-mono">
+                        {address.firstName} {address.lastName} <br />
+                        {address.addressLine1} <br />
+                        {address.addressLine2} <br />
+                        {address.state}, {address.pin} <br />
+                        {address.mobileNumber}
+                      </p>
+                    </div>
+                    <RadioGroup>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value={`address-${index}`}
+                          id={`address-${index}`}
+                          onClick={() => selectDeliveryAddress(address)}
+                        />
+                      </div>
+                    </RadioGroup>
+                  </div>
+                ))}
+
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      className="h-8 mt-2 text-xs bg-green-200 border-2 hover:bg-green-300 border-green-600 text-green-600"
+                      variant="outline"
+                      onClick={openDialog}
+                    >
+                      Add
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[800px]">
+                    <DialogHeader>
+                      <DialogTitle className="p-0 m-0">Add Address</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    {/* Pass the closeDialog function to UserForm */}
+                    <UserForm
+                      addUserAddress={addUserAddress}
+                      onClose={closeDialog}
+                    />
+                  </DialogContent>
+                </Dialog>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         {/* Cart Summary */}
@@ -113,7 +208,7 @@ const CartManagement = () => {
           <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
           <div className="flex justify-between mb-2">
             <span>Subtotal</span>
-            <span>₹{cartItemData?.actualTotalPrice}</span>
+            <span>₹{cartItemData?.finalTotalPrice}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>SGST</span>
@@ -149,9 +244,10 @@ const CartManagement = () => {
           onClick={() =>
             placeOrders(
               "cashondelivery",
-              "test-address",
-              "test-billing-address",
-              paymentMethod
+              selectAddress,
+              selectAddress,
+              paymentMethod,
+              quantity
             )
           }
         >

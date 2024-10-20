@@ -17,6 +17,7 @@ import { AddressProvider } from "./context/address/address";
 import ProtectedRoute from "./component/protected-route/protect-route";
 import { apiClient, handleApiError } from "./services/axios/axios.service";
 import { useCookies } from "react-cookie";
+import { UserProvider } from "./context/user/user";
 
 export function App() {
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -30,7 +31,7 @@ export function App() {
         password,
       });
       const { accessToken, userId } = response.data;
-      localStorage.setItem('userId', userId);
+      localStorage.setItem("userId", userId);
       setCookie("accessToken", accessToken, {
         path: "/",
         secure: true,
@@ -47,7 +48,7 @@ export function App() {
 
   useEffect(() => {
     if (cookies.accessToken) {
-      console.log("User is already logged in.");
+      // console.log("User is already logged in.");
     }
   }, [cookies]);
 
@@ -76,7 +77,9 @@ export function App() {
                   path="/cart"
                   element={
                     <ProtectedRoute isAuthenticated={!!accessToken}>
-                      <CartManagement />
+                      <AddressProvider>
+                        <CartManagement />
+                      </AddressProvider>
                     </ProtectedRoute>
                   }
                 />
@@ -95,7 +98,9 @@ export function App() {
                   element={
                     <ProtectedRoute isAuthenticated={!!accessToken}>
                       <AddressProvider>
-                        <Profile />
+                        <UserProvider>
+                          <Profile />
+                        </UserProvider>
                       </AddressProvider>
                     </ProtectedRoute>
                   }

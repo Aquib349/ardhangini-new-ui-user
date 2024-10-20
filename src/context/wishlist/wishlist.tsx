@@ -17,9 +17,8 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({
 
   // function to get wishlist data
   async function fetchWishlistItem() {
-    const userId = localStorage.getItem("usreId");
+    const userId = localStorage.getItem("userId");
     if (!userId) {
-      console.log("no user id");
       return;
     }
     setLoading(true);

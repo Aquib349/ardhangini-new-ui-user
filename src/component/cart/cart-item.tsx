@@ -13,6 +13,7 @@ function CartItem({
   quantity,
   removeItem,
   addItemWishlist,
+  setQuantity,
 }: {
   id: string;
   productTypeId: string;
@@ -24,6 +25,7 @@ function CartItem({
   quantity: string;
   removeItem: (productid: string, typeId: string, quantity: number) => void;
   addItemWishlist: (productid: string, typeId: string) => void;
+  setQuantity: (quantity: number) => void;
 }) {
   const initialCounter = Number(quantity) > 0 ? Number(quantity) : 1;
   const [counter, setCounter] = useState<number>(initialCounter);
@@ -32,6 +34,7 @@ function CartItem({
   function increaseQuantity(ObjectId: string) {
     if (id === ObjectId) {
       setCounter((prevState) => prevState + 1);
+      setQuantity(Number(quantity) + 1);
     }
   }
 
@@ -39,6 +42,7 @@ function CartItem({
   function decreaseQuantity(ObjectId: string) {
     if (id === ObjectId) {
       setCounter((prevState) => Math.max(1, prevState - 1));
+      setQuantity(Number(quantity) - 1);
     }
   }
 

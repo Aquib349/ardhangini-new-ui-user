@@ -23,7 +23,8 @@ export interface CartContextProps {
     orderType: string,
     deliveryAddress: string,
     billingAddress: string,
-    paymentMethod: string
+    paymentMethod: string,
+    quantity: number
   ) => void;
   itemLength: number
 }
