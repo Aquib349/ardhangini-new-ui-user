@@ -53,6 +53,7 @@ export const UserOrderProvider: React.FC<{ children: ReactNode }> = ({
 
     try {
       await cancelUserOrder(body);
+      toastService.dismissToast();
       toastService.showToast("Your order has been cancelled", "success", {
         position: "top-center",
       });

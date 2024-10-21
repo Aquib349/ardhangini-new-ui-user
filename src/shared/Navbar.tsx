@@ -19,7 +19,6 @@ import {
 import { useEffect, useState } from "react";
 import { useCart } from "../hooks/use-cart";
 import { apiClient } from "../services/axios/axios.service";
-import { useCookies } from "react-cookie";
 
 interface navbarProps {
   removeCookie: (accessToken: string) => void;
@@ -30,6 +29,7 @@ const Navbar = ({ removeCookie }: navbarProps) => {
   const [navbarBg, setNavbarBg] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +45,7 @@ const Navbar = ({ removeCookie }: navbarProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [useCart, cartItemData]);
+  }, [useCart, itemLength, cartItemData]);
 
   return (
     <>
@@ -68,14 +68,14 @@ const Navbar = ({ removeCookie }: navbarProps) => {
             />
             <p className="font-bold text-4xl logo-name">Ardhangini</p>
           </div>
-          <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
+          {/* <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
             <Input
               type="search"
               className="border-0 rounded-none bg-transparent px-2 w-full"
               placeholder="What are you looking for?"
             />
             <Search />
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-4">
@@ -119,15 +119,14 @@ const Navbar = ({ removeCookie }: navbarProps) => {
                     <Heart className="mr-2 h-4 w-4" />
                     <span>My Wishlist</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Headset className="mr-2 h-4 w-4" />
-                    <span>Help</span>
-                  </DropdownMenuItem>
+                 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onSelect={async () => {
-                      await apiClient.get("/user-auth/log-out");
+                      await apiClient.get("/user-auth/log-out", {
+                        params: { userId: userId },
+                      });
                       navigate("/login");
                       removeCookie("accessToken");
                     }}

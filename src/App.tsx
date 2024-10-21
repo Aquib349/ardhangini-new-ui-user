@@ -15,48 +15,18 @@ import { Toaster } from "react-hot-toast";
 import { UserOrderProvider } from "./context/orders/orders";
 import { AddressProvider } from "./context/address/address";
 import ProtectedRoute from "./component/protected-route/protect-route";
-import { apiClient, handleApiError } from "./services/axios/axios.service";
 import { useCookies } from "react-cookie";
 import { UserProvider } from "./context/user/user";
 
 export function App() {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-  const navigate = useNavigate();
-
-  const handleLogin = async (email: string, password: string) => {
-    try {
-      const response = await apiClient.post("/user-auth/sign-in", {
-        email,
-        password,
-      });
-      const { accessToken, userId } = response.data;
-      localStorage.setItem("userId", userId);
-      setCookie("accessToken", accessToken, {
-        path: "/",
-        secure: true,
-        sameSite: "strict",
-      });
-      setAccessToken(accessToken);
-      navigate("/");
-    } catch (error) {
-      handleApiError(error);
-      console.error("Login failed:", error);
-      throw error;
-    }
-  };
 
   useEffect(() => {
-    if (cookies.accessToken) {
-      // console.log("User is already logged in.");
-    }
-  }, [cookies]);
-
-  useEffect(() => {
-    if (cookies.accessToken) {
+    if (cookies?.accessToken) {
       setAccessToken(cookies.accessToken);
     }
-  }, [cookies]);
+  }, [cookies, setAccessToken]);
 
   return (
     <>
@@ -70,16 +40,23 @@ export function App() {
                 <Route path="/" element={<Main />} />
                 <Route
                   path="/login"
-                  element={<Login handleLogin={handleLogin} />}
+                  element={
+                    <Login
+                      setCookie={setCookie}
+                      setAccessToken={setAccessToken}
+                    />
+                  }
                 />
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route
                   path="/cart"
                   element={
                     <ProtectedRoute isAuthenticated={!!accessToken}>
+                      {/* <CartContextProvider> */}
                       <AddressProvider>
                         <CartManagement />
                       </AddressProvider>
+                      {/* </CartContextProvider> */}
                     </ProtectedRoute>
                   }
                 />
@@ -109,7 +86,9 @@ export function App() {
                   path="/wishlist"
                   element={
                     <ProtectedRoute isAuthenticated={!!accessToken}>
-                      <Wishlist />
+                      <WishlistProvider>
+                        <Wishlist />
+                      </WishlistProvider>
                     </ProtectedRoute>
                   }
                 />

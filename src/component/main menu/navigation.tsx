@@ -61,7 +61,7 @@ function Navigation({ active, setActive }: NavigationProps) {
                   NewComers
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              <NavigationMenuItem className="px-4 hover:bg-transparent">
+              {/* <NavigationMenuItem className="px-4 hover:bg-transparent">
                 <NavigationMenuTrigger className="bg-transparent">
                   Collections
                 </NavigationMenuTrigger>
@@ -147,7 +147,7 @@ function Navigation({ active, setActive }: NavigationProps) {
                 >
                   Ardhangini Exclusive
                 </NavigationMenuLink>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
             </NavigationMenuList>
           </NavigationMenu>
         </div>

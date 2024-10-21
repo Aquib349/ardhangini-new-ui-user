@@ -60,20 +60,27 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
     setLoading(true);
     try {
       await removeItemFromCart(body);
+
+      // Update the local state without fetching cart data again
       setCartItemData((prevData) => {
         if (!prevData) return null;
 
+        // Filter out the removed item
         const updatedItems = prevData.cartLineItems.filter(
           (item) => item.productId !== productId
         );
+
+        // Update item length
         setItemLength(updatedItems.length);
 
+        // Return the updated cart data
         return {
           ...prevData,
           cartLineItems: updatedItems,
         };
       });
 
+      // Show success toast message
       toastService.showToast("Item removed from cart", "success", {
         position: "top-center",
       });
@@ -142,7 +149,7 @@ export const CartContextProvider: React.FC<{ children: ReactNode }> = ({
         removeItem,
         fetchCartData,
         placeOrders,
-        itemLength, // Make sure itemLength is being passed
+        itemLength,
       }}
     >
       {children}

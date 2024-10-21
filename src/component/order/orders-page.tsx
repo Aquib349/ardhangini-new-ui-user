@@ -12,6 +12,7 @@ import { useOrders } from "../../hooks/use-order";
 
 const Orders: React.FC = () => {
   const { AllOrders, cancelOrder } = useOrders();
+  console.log(AllOrders);
   return (
     <>
       <div className="order-component pt-2">
@@ -220,7 +221,7 @@ const Orders: React.FC = () => {
                             <hr />
                             <Button
                               className="bg-orange-500 mt-2 h-8"
-                              onClick={() => cancelOrder(val.id)}
+                              onClick={() => cancelOrder(order.orderId)}
                             >
                               Cancel
                             </Button>
