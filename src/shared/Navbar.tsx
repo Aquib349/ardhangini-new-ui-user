@@ -6,6 +6,7 @@ import {
   LogOut,
   Menu,
   Search,
+  ShoppingBasket,
   ShoppingCart,
   User,
 } from "lucide-react";
@@ -51,7 +52,7 @@ const Navbar = ({ removeCookie }: navbarProps) => {
     <>
       <div className="navbar-component">
         <div
-          className={`main flex justify-between items-center py-1 px-2 z-50 fixed w-full left-0 top-0 transition-colors duration-900 ${
+          className={`main flex justify-around items-center py-1 px-2 z-50 fixed w-full left-0 top-10 transition-colors duration-900 ${
             navbarBg && location.pathname === "/"
               ? "bg-gradient-to-r from-blue-400 via-[#fdf3cf] to-[#fdecd2]"
               : "bg-gradient-to-r from-blue-400 via-[#fdf3cf] to-[#fdecd2]"
@@ -61,36 +62,69 @@ const Navbar = ({ removeCookie }: navbarProps) => {
             className="logo flex items-center cursor-pointer "
             onClick={() => navigate("/")}
           >
-            <img
-              src="assets/logo.png"
-              alt="logo"
-              className="w-16 h-16 rounded-full p-1"
-            />
-            <p className="font-bold text-4xl logo-name">Ardhangini</p>
+            <img src="assets/logo.png" alt="logo" className="w-[300px]" />
           </div>
-          {/* <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
+          <div className="flex items-center border border-red-300 px-3 w-1/3 bg-white/40 rounded-md gap-3 focus-within:bg-white/70">
             <Input
               type="search"
               className="border-0 rounded-none bg-transparent px-2 w-full"
               placeholder="What are you looking for?"
             />
             <Search />
-          </div> */}
+          </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-4">
-              <Headset size={20} />
+          <div className="">
+            <div className="flex items-center gap-6">
+              <div className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1">
+                <Headset size={18} />
+                <p className="text-xs font-bold">Help</p>
+              </div>
               <div
-                className="relative cursor-pointer"
+                className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1"
+                onClick={() => navigate("/profile")}
+              >
+                <User size={18} />
+                <p className="text-xs font-bold">Account</p>
+              </div>
+              <div
+                className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1"
+                onClick={() => navigate("/orders")}
+              >
+                <ShoppingBasket size={18} />
+                <p className="text-xs font-bold">Orders</p>
+              </div>
+              <div
+                className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1"
+                onClick={() => navigate("/wishlist")}
+              >
+                <Heart size={18} />
+                <span className="text-xs font-bold">Wishlist</span>
+              </div>
+              <div
+                className="relative cursor-pointer flex-1 flex flex-col items-center justify-center space-y-1"
                 onClick={() => navigate("/cart")}
               >
-                <ShoppingCart size={20} />
-                <div className="text-white w-5 h-5 text-[0.75rem] bg-red-500 font-bold absolute rounded-full -top-2 -right-2 flex justify-center items-center">
+                <ShoppingCart size={18} />
+                <p className="text-xs font-bold">Cart</p>
+                <div className="text-white w-4 h-4 text-[0.6rem] bg-red-500 font-bold absolute rounded-full -top-3 right-0 flex justify-center items-center">
                   {itemLength}
                 </div>
               </div>
+              <div
+                className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1"
+                onClick={async () => {
+                  await apiClient.get("/user-auth/log-out", {
+                    params: { userId: userId },
+                  });
+                  navigate("/login");
+                  removeCookie("accessToken");
+                }}
+              >
+                <LogOut size={17} />
+                <p className="text-xs font-bold">Logout</p>
+              </div>
             </div>
-            <div className="nav-items flex z-50">
+            {/* <div className="nav-items flex z-50">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <div className="cursor-pointer px-1 py-0.5">
@@ -136,7 +170,7 @@ const Navbar = ({ removeCookie }: navbarProps) => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

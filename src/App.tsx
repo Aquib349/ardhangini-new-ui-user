@@ -17,6 +17,8 @@ import { AddressProvider } from "./context/address/address";
 import ProtectedRoute from "./component/protected-route/protect-route";
 import { useCookies } from "react-cookie";
 import { UserProvider } from "./context/user/user";
+import Banner from "./shared/Banner";
+import Categories from "./component/layouts/Categories";
 
 export function App() {
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -34,6 +36,7 @@ export function App() {
       <CartContextProvider>
         <WishlistProvider>
           <ProductContextProvider>
+            <Banner />
             {<Navbar removeCookie={removeCookie} />}
             <div className="mt-[4.5rem]">
               <Routes>
@@ -97,6 +100,7 @@ export function App() {
           </ProductContextProvider>
         </WishlistProvider>
       </CartContextProvider>
+      <Categories/>
     </>
   );
 }
