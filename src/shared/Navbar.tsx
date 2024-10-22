@@ -23,9 +23,10 @@ import { apiClient } from "../services/axios/axios.service";
 
 interface navbarProps {
   removeCookie: (accessToken: string) => void;
+  accessToken: string | undefined;
 }
 
-const Navbar = ({ removeCookie }: navbarProps) => {
+const Navbar = ({ removeCookie, accessToken }: navbarProps) => {
   const { cartItemData, itemLength } = useCart();
   const [navbarBg, setNavbarBg] = useState(false);
   const navigate = useNavigate();
@@ -113,15 +114,23 @@ const Navbar = ({ removeCookie }: navbarProps) => {
               <div
                 className="flex-1 flex flex-col items-center justify-center cursor-pointer space-y-1"
                 onClick={async () => {
-                  await apiClient.get("/user-auth/log-out", {
-                    params: { userId: userId },
-                  });
-                  navigate("/login");
-                  removeCookie("accessToken");
+                  if (!!accessToken) {
+                    // User is logged in, log them out
+                    await apiClient.get("/user-auth/log-out", {
+                      params: { userId: userId },
+                    });
+                    removeCookie("accessToken");
+                    navigate("/login");
+                  } else {
+                    // User is not logged in, navigate to login
+                    navigate("/login");
+                  }
                 }}
               >
                 <LogOut size={17} />
-                <p className="text-xs font-bold">Logout</p>
+                <p className="text-xs font-bold">
+                  {!!accessToken ? "Logout" : "Login"}
+                </p>
               </div>
             </div>
             {/* <div className="nav-items flex z-50">

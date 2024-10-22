@@ -117,6 +117,7 @@ export const ProductContextProvider: React.FC<{ children: ReactNode }> = ({
 
     try {
       const data: wishlistResponse = await AddItemToWishlist(body);
+      toastService.dismissToast();
       toastService.showToast("Item added to wishlist", "success", {
         position: "top-center",
       });

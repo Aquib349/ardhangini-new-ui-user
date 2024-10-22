@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Welcome from "../../shared/welcome-content";
 import Navigation from "./navigation";
-import NewComers from "./new-comers";
-import { ProductContextProvider } from "../../context/new comers/new-comers";
 import Categories from "../layouts/Categories";
+import Testimonials from "../layouts/testimonials";
+import Commitment from "../layouts/commitment";
 
 function Main() {
   const [active, setActive] = useState("newcomers");
@@ -13,13 +13,10 @@ function Main() {
       <Welcome />
       <Navigation active={active} setActive={setActive} />
 
-      {/* new comers */}
-      <ProductContextProvider>
-        <NewComers />
-      </ProductContextProvider>
-
       {/* section varities */}
-      {/* <Categories /> */}
+      <Categories />
+      <Testimonials />
+      <Commitment />
     </>
   );
 }

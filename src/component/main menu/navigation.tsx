@@ -9,7 +9,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "../ui/navigation-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ListItem } from "./list-items";
 
 interface NavigationProps {
@@ -19,10 +19,11 @@ interface NavigationProps {
 
 function Navigation({ active, setActive }: NavigationProps) {
   const [menuBar, setMenuBar] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleMenubar() {
-      if (window.scrollY > 700) {
+      if (window.scrollY > 600) {
         setMenuBar(true);
       } else {
         setMenuBar(false);
@@ -40,8 +41,8 @@ function Navigation({ active, setActive }: NavigationProps) {
     <>
       <div className="menubar-compon">
         <div
-          className={`main bg-slate-600 text-white py-2 md:flex md:justify-center md:items-center transition-all duration-300 ${
-            menuBar ? "fixed top-[70px] left-0 shadow-md w-full z-40" : ""
+          className={`main z-40 bg-slate-600 text-white py-2 md:flex md:justify-center md:items-center transition-all duration-300 ${
+            menuBar ? "fixed top-[120px] left-0 shadow-md w-full" : ""
           }`}
         >
           <NavigationMenu>
@@ -57,47 +58,19 @@ function Navigation({ active, setActive }: NavigationProps) {
       hover:before:scale-x-100 ${
         active === "newcomers" ? "before:scale-x-100" : ""
       }`}
+                  onClick={() => navigate("/new-comers")}
                 >
                   NewComers
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              {/* <NavigationMenuItem className="px-4 hover:bg-transparent">
+              <NavigationMenuItem className="px-4 hover:bg-transparent">
                 <NavigationMenuTrigger className="bg-transparent">
                   Collections
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                    <li className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                          to="/"
-                        >
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            shadcn/ui
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Beautifully designed components that you can copy
-                            and paste into your apps. Accessible. Customizable.
-                            Open Source.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <ListItem href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
-                    </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
-                      How to install dependencies and structure your app.
-                    </ListItem>
-                    <ListItem
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
-                    </ListItem>
-                  </ul>
+                  <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                    <p className="text-center">Coming soon</p>
+                  </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem className="px-4">
@@ -110,9 +83,9 @@ function Navigation({ active, setActive }: NavigationProps) {
                       <ListItem
                         key={component.title}
                         title={component.title}
-                        href={component.href}
+                        // href={component.href}
                       >
-                        {component.description}
+                        <p className="text-xs"> {component.description}</p>
                       </ListItem>
                     ))}
                   </ul>
@@ -147,7 +120,7 @@ function Navigation({ active, setActive }: NavigationProps) {
                 >
                   Ardhangini Exclusive
                 </NavigationMenuLink>
-              </NavigationMenuItem> */}
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>

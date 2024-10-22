@@ -2,6 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { wishlistProps, WishlistResponse } from "./interface";
 import { getWishlistItem, RemoveWishlistItem } from "./wishlist.service";
 import { wishlistResponse } from "../new comers/interface";
+import { toastService } from "../../services/toast/toast.service";
 
 export const wishlistContext = createContext<wishlistProps | undefined>(
   undefined
@@ -25,7 +26,6 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const data: WishlistResponse = await getWishlistItem(userId);
       setWishlistData(data);
-    
     } catch (error) {
       console.log(error);
     }
@@ -51,8 +51,11 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({
       ],
     };
     try {
-      const data: wishlistResponse = await RemoveWishlistItem(body);
-      return data;
+      await RemoveWishlistItem(body);
+
+      toastService.showToast("item removed successfully", "success", {
+        position: "top-center",
+      });
     } catch (error) {
       console.log(error);
     } finally {

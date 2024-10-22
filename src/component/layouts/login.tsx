@@ -46,7 +46,7 @@ function Login({ setCookie, setAccessToken }: LoginProps) {
 
   return (
     <div className="login-component">
-      <div className="main text-sm">
+      <div className="main text-sm h-screen">
         <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
           <h2 className="text-xl font-semibold text-center">Login</h2>
           <form onSubmit={handleSubmit} className="mt-4">

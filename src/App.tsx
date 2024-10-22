@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./shared/Navbar";
 import CartManagement from "./component/cart/cart-page";
 import Orders from "./component/order/orders-page";
@@ -18,17 +18,26 @@ import ProtectedRoute from "./component/protected-route/protect-route";
 import { useCookies } from "react-cookie";
 import { UserProvider } from "./context/user/user";
 import Banner from "./shared/Banner";
-import Categories from "./component/layouts/Categories";
+import NewComers from "./component/new comers/new-comers";
+import Footer from "./component/layouts/footer";
 
 export function App() {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    // Set access token from cookies
     if (cookies?.accessToken) {
       setAccessToken(cookies.accessToken);
     }
   }, [cookies, setAccessToken]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <>
@@ -37,8 +46,8 @@ export function App() {
         <WishlistProvider>
           <ProductContextProvider>
             <Banner />
-            {<Navbar removeCookie={removeCookie} />}
-            <div className="mt-[4.5rem]">
+            {<Navbar removeCookie={removeCookie} accessToken={accessToken} />}
+            <div className="mt-[7.5rem] bg-[#fdf3e3] w-full h-full">
               <Routes>
                 <Route path="/" element={<Main />} />
                 <Route
@@ -51,15 +60,14 @@ export function App() {
                   }
                 />
                 <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/new-comers" element={<NewComers />} />
                 <Route
                   path="/cart"
                   element={
                     <ProtectedRoute isAuthenticated={!!accessToken}>
-                      {/* <CartContextProvider> */}
                       <AddressProvider>
                         <CartManagement />
                       </AddressProvider>
-                      {/* </CartContextProvider> */}
                     </ProtectedRoute>
                   }
                 />
@@ -100,7 +108,8 @@ export function App() {
           </ProductContextProvider>
         </WishlistProvider>
       </CartContextProvider>
-      <Categories/>
+
+      <Footer />
     </>
   );
 }

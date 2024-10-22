@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../component/ui/button";
 
 function Welcome() {
+  const navigate = useNavigate();
   return (
     <>
-      <div className="relative h-[600px]">
+      <div className="relative h-[600px] z-20">
         {/* Video Background with lower opacity */}
         <video
           autoPlay
@@ -24,6 +26,7 @@ function Welcome() {
             <Button
               variant="outline"
               className="text-white font-medium rounded h-9 bg-black/70 cursor-pointer ml-40 z-20 relative mt-2"
+              onClick={() => navigate("/new-comers")}
             >
               See All Collections
             </Button>

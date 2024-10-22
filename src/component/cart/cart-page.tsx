@@ -74,30 +74,32 @@ const CartManagement = () => {
   }, [isCodEnabled]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 px-4 py-2 text-sm w-[95%] m-auto relative">
-      <div className="w-full lg:w-2/3">
-        <div className="space-y-2">
-          {cartItemData?.cartLineItems.map((val) => (
-            <CartItem
-              key={val.id}
-              id={val.productId}
-              productTypeId={val.productTypeId}
-              image="https://via.placeholder.com/150"
-              title={val.productName}
-              size="fixed size"
-              actualPrice={val.actualPricePerItem}
-              finalPrice={val.finalPricePerItem}
-              quantity={val.quantity}
-              removeItem={removeItem}
-              addItemWishlist={addItemWishlist}
-              setQuantity={setQuantity}
-            />
-          ))}
+    <div className="pb-16">
+      <div className="flex flex-col lg:flex-row gap-8 px-4 py-2 text-sm w-[95%] m-auto relative">
+        <div className="w-full lg:w-2/3">
+          <div className="space-y-2">
+            {cartItemData?.cartLineItems.map((val) => (
+              <CartItem
+                key={val.id}
+                id={val.productId}
+                productTypeId={val.productTypeId}
+                image="https://via.placeholder.com/150"
+                title={val.productName}
+                size="fixed size"
+                actualPrice={val.actualPricePerItem}
+                finalPrice={val.finalPricePerItem}
+                quantity={val.quantity}
+                removeItem={removeItem}
+                addItemWishlist={addItemWishlist}
+                setQuantity={setQuantity}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="w-full lg:w-1/3 space-y-4">
-        {/* <Accordion
+        {cartItemData?.cartLineItems?.length! > 0 && (
+          <div className="w-full lg:w-1/3 space-y-4">
+            {/* <Accordion
           type="single"
           collapsible
           className="w-full bg-red-50 rounded-md"
@@ -131,7 +133,7 @@ const CartManagement = () => {
           </AccordionItem>
         </Accordion> */}
 
-        {/* <div className="border px-4 py-3 rounded-lg">
+            {/* <div className="border px-4 py-3 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Promo Code</h2>
           <div className="flex space-x-2">
             <input
@@ -145,116 +147,120 @@ const CartManagement = () => {
           </div>
         </div> */}
 
-        {/* user address */}
-        <div className="border px-4 py-3 rounded-lg">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1" className="pr-4">
-              <AccordionTrigger className="hover:no-underline text-md">
-                Saved Address
-              </AccordionTrigger>
-              <AccordionContent>
-                {addresses?.map((address, index) => (
-                  <div key={index} className="flex justify-between">
-                    <div className="flex justify-between items-center py-4 border-b">
-                      <p className="font-mono">
-                        {address.firstName} {address.lastName} <br />
-                        {address.addressLine1} <br />
-                        {address.addressLine2} <br />
-                        {address.state}, {address.pin} <br />
-                        {address.mobileNumber}
-                      </p>
-                    </div>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={`address-${index}`}
-                          id={`address-${index}`}
-                          onClick={() => selectDeliveryAddress(address)}
-                        />
+            {/* user address */}
+            <div className="border px-4 py-3 rounded-lg">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1" className="pr-4">
+                  <AccordionTrigger className="hover:no-underline text-md">
+                    Saved Address
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {addresses?.map((address, index) => (
+                      <div key={index} className="flex justify-between">
+                        <div className="flex justify-between items-center py-4 border-b">
+                          <p className="font-mono">
+                            {address.firstName} {address.lastName} <br />
+                            {address.addressLine1} <br />
+                            {address.addressLine2} <br />
+                            {address.state}, {address.pin} <br />
+                            {address.mobileNumber}
+                          </p>
+                        </div>
+                        <RadioGroup>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value={`address-${index}`}
+                              id={`address-${index}`}
+                              onClick={() => selectDeliveryAddress(address)}
+                            />
+                          </div>
+                        </RadioGroup>
                       </div>
-                    </RadioGroup>
-                  </div>
-                ))}
+                    ))}
 
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      className="h-8 mt-2 text-xs bg-green-200 border-2 hover:bg-green-300 border-green-600 text-green-600"
-                      variant="outline"
-                      onClick={openDialog}
-                    >
-                      Add
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[800px]">
-                    <DialogHeader>
-                      <DialogTitle className="p-0 m-0">Add Address</DialogTitle>
-                      <DialogDescription></DialogDescription>
-                    </DialogHeader>
-                    {/* Pass the closeDialog function to UserForm */}
-                    <UserForm
-                      addUserAddress={addUserAddress}
-                      onClose={closeDialog}
-                    />
-                  </DialogContent>
-                </Dialog>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          className="h-8 mt-2 text-xs bg-green-200 border-2 hover:bg-green-300 border-green-600 text-green-600"
+                          variant="outline"
+                          onClick={openDialog}
+                        >
+                          Add
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[800px]">
+                        <DialogHeader>
+                          <DialogTitle className="p-0 m-0">
+                            Add Address
+                          </DialogTitle>
+                          <DialogDescription></DialogDescription>
+                        </DialogHeader>
+                        {/* Pass the closeDialog function to UserForm */}
+                        <UserForm
+                          addUserAddress={addUserAddress}
+                          onClose={closeDialog}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
 
-        {/* Cart Summary */}
-        <div className="border px-4 py-3 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
-          <div className="flex justify-between mb-2">
-            <span>Subtotal</span>
-            <span>₹{cartItemData?.finalTotalPrice}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span>SGST</span>
-            <span>₹{cartItemData?.totalSgst}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span>CGST</span>
-            <span>₹{cartItemData?.totalCgst}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span>Shipping</span>
-            <span>₹0.00</span>
-          </div>
-          <div className="flex justify-between mb-2 text-green-500">
-            <span>Free Shipping Promo</span>
-            <span>-₹0.00</span>
-          </div>
-          <div className="flex justify-between font-bold">
-            <span>Total Cost</span>
-            <span>₹{Number(cartItemData?.finalTotalPrice).toFixed(2)}</span>
-          </div>
-        </div>
+            {/* Cart Summary */}
+            <div className="border px-4 py-3 rounded-lg">
+              <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
+              <div className="flex justify-between mb-2">
+                <span>Subtotal</span>
+                <span>₹{cartItemData?.finalTotalPrice}</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span>SGST</span>
+                <span>₹{cartItemData?.totalSgst}</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span>CGST</span>
+                <span>₹{cartItemData?.totalCgst}</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span>Shipping</span>
+                <span>₹0.00</span>
+              </div>
+              <div className="flex justify-between mb-2 text-green-500">
+                <span>Free Shipping Promo</span>
+                <span>-₹0.00</span>
+              </div>
+              <div className="flex justify-between font-bold">
+                <span>Total Cost</span>
+                <span>₹{Number(cartItemData?.finalTotalPrice).toFixed(2)}</span>
+              </div>
+            </div>
 
-        {/* payment history */}
-        <Payment
-          isCodEnabled={isCodEnabled}
-          handleToggle={handlePaymentMethod}
-        />
+            {/* payment history */}
+            <Payment
+              isCodEnabled={isCodEnabled}
+              handleToggle={handlePaymentMethod}
+            />
 
-        {/* Checkout Section */}
-        <Button
-          className="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-600"
-          onClick={() =>
-            placeOrders(
-              "cashondelivery",
-              selectAddress,
-              selectAddress,
-              paymentMethod,
-              quantity
-            )
-          }
-        >
-          <span className="flex items-center justify-center space-x-2">
-            <span>CheckOut</span>
-          </span>
-        </Button>
+            {/* Checkout Section */}
+            <Button
+              className="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-600"
+              onClick={() =>
+                placeOrders(
+                  "cashondelivery",
+                  selectAddress,
+                  selectAddress,
+                  paymentMethod,
+                  quantity
+                )
+              }
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <span>CheckOut</span>
+              </span>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
